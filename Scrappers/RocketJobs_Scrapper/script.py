@@ -4,19 +4,17 @@ from selenium.webdriver.edge.service import Service
 from selenium.webdriver.edge.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import time
-from browsermobproxy import Server
 import json
-import  re
+import re
+import keyboard
+import sys
 
 
-def fetch_jobs_with_scroll(url, driver, proxy):
-    # Startowanie serwera BrowserMobProxy i tworzenie HAR dla monitorowania
-    proxy.new_har("rocketjobs")
+def fetch_jobs_with_scroll(url, driver):
 
     driver.get(url)
-    SCROLL_PAUSE_TIME = 5  # Czas pauzy na załadowanie elementów po scrollowaniu
 
-    # Skryt do Nadpisanie XMLHttpRequest do przechwytywania odpowiedzi XHR
+    # Script that will print content of a call to offers api that will alow me to intercept data
     driver.execute_script("""
                     (function() {
                         var oldXHR = window.XMLHttpRequest;
@@ -34,73 +32,71 @@ def fetch_jobs_with_scroll(url, driver, proxy):
                 """)
 
     all_jobs = []
-    
+
+    # When the page is loaded a cookie pop up will appear
+    try:
+        time.sleep(15)
+        cookie_button = driver.find_element(By.ID, "cookiescript_accept")
+        cookie_button.click()
+    except Exception as e:
+        print(f"Cookie button is not found {e}")
+
     while True:
-        time.sleep(5)
-        # Zbieranie logów konsoli z przeglądarki
+        driver.execute_script("window.scrollBy(0, 400);")
+        time.sleep(1)
         logs = driver.get_log('browser')
 
         for entry in logs:
-            if entry['level'] == "INFO":
-                # Usuwanie nadmiarowych znaków ucieczki
+            if entry['level'] == "INFO" and 'slug' in entry['message']:
                 text = entry['message']
-                # Usuwanie nadmiarowych znaków ucieczki
                 cleaned_text = text.replace('\\\"', '\"').replace('\\\\', '\\')
-
-                # Ekstrakcja JSON
                 json_text = re.search(r'\{.*\}', cleaned_text).group()
 
-                # Parsowanie JSON
                 data = json.loads(json_text)
-
-                # Wyświetlanie
-                print(json.dumps(data, indent=2, ensure_ascii=False))
-
+                for job_data in data['data']:
+                    job = {}
+                    for key, value in job_data.items():
+                        job[key] = value if value is not None else 'brak informacji'
+                    all_jobs.append(job)
+        if keyboard.is_pressed('|'):
+            break
     return all_jobs
 
 
-if __name__ == '__main__':
-    # Konfiguracja BrowserMobProxy
-    bmp_path = r'C:\Users\kubag\Documents\GitHub\browser-mob\browsermob-proxy-2.1.4\bin\browsermob-proxy.bat'  # Zmień na ścieżkę do BrowserMobProxy
-    server = Server(bmp_path)
-    server.start()
-    proxy = server.create_proxy()
-
-    # Konfiguracja przeglądarki
-    # enable browser logging
+def set_up_webdriver(binary_location=None, driver_location=None):
+    # Enabling browser logging
     capabilities = DesiredCapabilities.EDGE
     capabilities['ms:loggingPrefs'] = {'browser': 'ALL'}
     capabilities['acceptInsecureCerts'] = bool(True)
 
-    # load the desired webpage
+    # Setting up our webdriver
     edge_options = Options()
     edge_options.add_argument('--ignore-certificate-errors')
     edge_options.add_argument('--allow-running-insecure-content')
-    edge_options.add_argument('--proxy-server={0}'.format(proxy.proxy))
     edge_options.use_chromium = True
     edge_options.binary_location = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
-    driver_service = Service(r'C:\Users\kubag\Documents\GitHub\msedgedriver.exe')
+    driver_service = Service(
+        r'C:\Users\kubag\Documents\GitHub\msedgedriver.exe')  # you must change to your webdriver location
     edge_options.set_capability("ms:edgeOptions", capabilities)
 
     driver = webdriver.Edge(service=driver_service, options=edge_options)
+    return driver
+
+if __name__ == '__main__':
 
 
-
-    # URL strony, z której chcesz pobierać oferty
+    driver = set_up_webdriver()
     url = 'https://rocketjobs.pl'
 
-    # Pobieranie ofert pracy
-    jobs = fetch_jobs_with_scroll(url, driver, proxy, )
+    jobs = fetch_jobs_with_scroll(url, driver)
 
-    # Zamykamy przeglądarkę
     driver.quit()
 
-    # Zatrzymywanie serwera BrowserMobProxy
-    server.stop()
-
-    # Wyświetlanie ofert pracy
     for job in jobs:
         print(f"Oferta: {job.get('title', 'Brak tytułu')}, Firma: {job.get('companyName', 'Brak nazwy firmy')}, "
               f"Lokalizacja: {job.get('city', 'Brak lokalizacji')}, Wynagrodzenie: {job.get('employmentTypes', 'Brak informacji')}")
 
     print(f"Liczba ofert: {len(jobs)}")
+
+    with open('jobs.json', 'w', encoding='utf-8') as file:
+        json.dump(jobs, file, ensure_ascii=False, indent=2)
