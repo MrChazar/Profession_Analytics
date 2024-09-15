@@ -4,10 +4,10 @@ from selenium.webdriver.edge.service import Service
 from selenium.webdriver.edge.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import time
+import keyboard
 import json
 import re
-import keyboard
-import sys
+
 
 
 def fetch_jobs_with_scroll(url, driver):
@@ -42,7 +42,7 @@ def fetch_jobs_with_scroll(url, driver):
         print(f"Cookie button is not found {e}")
 
     while True:
-        driver.execute_script("window.scrollBy(0, 400);")
+        driver.execute_script("window.scrollBy(0, 500);")
         time.sleep(1)
         logs = driver.get_log('browser')
 
@@ -83,7 +83,6 @@ def set_up_webdriver(binary_location=None, driver_location=None):
     return driver
 
 if __name__ == '__main__':
-
 
     driver = set_up_webdriver()
     url = 'https://rocketjobs.pl'
