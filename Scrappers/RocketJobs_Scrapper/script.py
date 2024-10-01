@@ -7,11 +7,12 @@ import time
 import keyboard
 import json
 import re
-
+import os
 
 
 def fetch_jobs_with_scroll(url, driver):
 
+    print(f"ten {driver}")
     driver.get(url)
 
     # Script that will print content of a call to offers api that will alow me to intercept data
@@ -58,8 +59,14 @@ def fetch_jobs_with_scroll(url, driver):
                     for key, value in job_data.items():
                         job[key] = value if value is not None else 'brak informacji'
                     all_jobs.append(job)
-        if keyboard.is_pressed('|'):
+
+        try:
+            driver.find_element(By.CLASS_NAME, 'footer_youtube_link')
+        except Exception as e:
+            print("Nieznaleziono")
+        else:
             break
+
     return all_jobs
 
 
@@ -74,13 +81,28 @@ def set_up_webdriver(binary_location=None, driver_location=None):
     edge_options.add_argument('--ignore-certificate-errors')
     edge_options.add_argument('--allow-running-insecure-content')
     edge_options.use_chromium = True
-    edge_options.binary_location = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+    edge_options.binary_location = r'C:\Program Files (x86)\Microsoft\Edge\Application\new_msedge.exe'
     driver_service = Service(
-        r'C:\Users\kubag\Documents\GitHub\msedgedriver.exe')  # you must change to your webdriver location
+        r'C:\Users\jakub\OneDrive\Dokumenty\GitHub\Profession_Analytics\Scrappers\RocketJobs_Scrapper\edgedriver_win64\msedgedriver.exe')  # you must change to your webdriver location
     edge_options.set_capability("ms:edgeOptions", capabilities)
-
     driver = webdriver.Edge(service=driver_service, options=edge_options)
     return driver
+
+
+def load_existing_jobs(file_path):
+    if os.path.exists(file_path):
+        with open(file_path, 'r', encoding='utf-8') as file:
+            try:
+                return json.load(file)
+            except json.JSONDecodeError:
+                return []  # Zwróć pustą listę, jeśli plik jest pusty lub uszkodzony
+    return []
+
+
+def save_jobs(file_path, jobs):
+    with open(file_path, 'w', encoding='utf-8') as file:
+        json.dump(jobs, file, ensure_ascii=False, indent=2)
+
 
 if __name__ == '__main__':
 
@@ -89,6 +111,19 @@ if __name__ == '__main__':
 
     jobs = fetch_jobs_with_scroll(url, driver)
 
+    try:
+        existing_jobs = load_existing_jobs("jobs.json")
+    except:
+        with open('jobs.json', 'w', encoding='utf-8') as file:
+            json.dump(jobs, file, ensure_ascii=False, indent=2)
+    else:
+        existing_slugs = {job['slug'] for job in existing_jobs}
+        existing_dates = {job['publishedAt'] for job in existing_jobs}
+        for new_job in jobs:
+            if new_job['slug'] not in existing_slugs and new_job['publishedAt'] not in existing_slugs:
+                existing_jobs.append(new_job)  # Dodaj nową ofertę pracy do listy
+        save_jobs("jobs.json", existing_jobs)
+
     driver.quit()
 
     for job in jobs:
@@ -96,6 +131,3 @@ if __name__ == '__main__':
               f"Lokalizacja: {job.get('city', 'Brak lokalizacji')}, Wynagrodzenie: {job.get('employmentTypes', 'Brak informacji')}")
 
     print(f"Liczba ofert: {len(jobs)}")
-
-    with open('jobs.json', 'w', encoding='utf-8') as file:
-        json.dump(jobs, file, ensure_ascii=False, indent=2)
