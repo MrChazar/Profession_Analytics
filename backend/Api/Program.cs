@@ -1,15 +1,29 @@
+using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
+using backend.Infrastructure.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSingleton<IMongoClient>(s =>
+{
+    return new MongoClient(builder.Configuration.GetConnectionString("MongoDB"));
+});
+
+builder.Services.AddScoped(s =>
+{
+    var mongoClient = s.GetRequiredService<IMongoClient>();
+    var mongoDatabase = mongoClient.GetDatabase("Job_Analytics"); 
+    return DatabaseContext.Create(mongoDatabase);
+});
+
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -17,7 +31,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.MapControllers();

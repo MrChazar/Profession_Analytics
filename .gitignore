@@ -9,6 +9,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 build/
+Debug/
 develop-eggs/
 dist/
 downloads/
@@ -24,6 +25,10 @@ share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+*.dll
+*.vsidx
+*.bin
+*/Debug
 MANIFEST
 
 # PyInstaller
