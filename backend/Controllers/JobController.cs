@@ -1,7 +1,6 @@
 ﻿using backend.Domain.Entities;
-using backend.Infrastructure.Data;
-using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers
 {
@@ -9,20 +8,20 @@ namespace backend.Controllers
     [Route("[controller]")]
     public class JobController : ControllerBase
     {
-        private readonly DatabaseContext _dbContext;
-        private readonly ILogger<JobController> _logger;
+        private readonly IMongoCollection<JobOffer> _jobOffersCollection;
 
-        public JobController(ILogger<JobController> logger, DatabaseContext dbContext)
+        public JobController(IMongoClient mongoClient)
         {
-            _logger = logger;
-            _dbContext = dbContext;
+            var database = mongoClient.GetDatabase("Job_Analytics");  
+            _jobOffersCollection = database.GetCollection<JobOffer>("job_offers"); 
         }
 
         [HttpGet]
         public IEnumerable<JobOffer> GetJobOffers()
         {
-            // Pobieranie wszystkich ofert pracy z MongoDB
-            return _dbContext.JobOffers.ToList();
+            var a = _jobOffersCollection.Find(_ => true).ToList();
+
+            return _jobOffersCollection.Find(_ => true).ToList();  
         }
     }
 }

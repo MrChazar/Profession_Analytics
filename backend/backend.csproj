@@ -19,6 +19,7 @@
   <ItemGroup>
     <Folder Include="Application\" />
     <Folder Include="Tests\" />
+	<Folder Include="Api\" />
   </ItemGroup>
 
 </Project>

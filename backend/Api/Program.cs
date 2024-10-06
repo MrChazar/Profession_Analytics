@@ -1,15 +1,17 @@
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using backend.Infrastructure.Data;
+using backend.Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
+
 builder.Services.AddSingleton<IMongoClient>(s =>
 {
-    return new MongoClient(builder.Configuration.GetConnectionString("MongoDB"));
+    return new MongoClient("mongodb://localhost:27017/Job_Analytics");
 });
 
 builder.Services.AddScoped(s =>
