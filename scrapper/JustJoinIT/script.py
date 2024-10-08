@@ -8,6 +8,7 @@ import json
 import re
 import os
 from pymongo import MongoClient
+import keyboard
 
 
 def fetch_jobs_with_scroll(url, driver):
@@ -67,6 +68,10 @@ def fetch_jobs_with_scroll(url, driver):
         else:
             break
 
+        # for quick script termination
+        if keyboard.is_pressed('|'):
+            break
+
     return all_jobs
 
 
@@ -112,9 +117,13 @@ def save_to_mongodb(jobs, db_name, collection_name):
     collection = db[collection_name]
 
     # Save new job offers
-    if jobs:
-        collection.insert_many(jobs)
-        print(f"Saved {len(jobs)} job offers to MongoDB.")
+    for job in jobs:
+        try:
+            collection.insert_one(job)
+        except:
+            print("Job already exists")
+            continue
+
     return None
 
 
@@ -140,7 +149,7 @@ if __name__ == '__main__':
     existing_slugs = {job['slug'] for job in existing_jobs}
     existing_dates = {job['publishedAt'] for job in existing_jobs}
     for new_job in jobs:
-        if new_job['slug'] not in existing_slugs and new_job['publishedAt'] not in existing_slugs:
+        if new_job['slug'] not in existing_slugs and new_job['publishedAt'] not in existing_dates:
             existing_jobs.append(new_job)  # Add new unique job offer to list
 
     driver.quit()
