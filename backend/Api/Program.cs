@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using backend.Infrastructure.Data;
 using backend.Domain.Entities;
+using backend.Application.Interfaces;
+using backend.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,11 +16,12 @@ builder.Services.AddSingleton<IMongoClient>(s =>
     return new MongoClient("mongodb://localhost:27017/Job_Analytics");
 });
 
-builder.Services.AddScoped(s =>
+builder.Services.AddScoped<IJobService, JobService>();
+
+builder.Services.AddCors(options =>
 {
-    var mongoClient = s.GetRequiredService<IMongoClient>();
-    var mongoDatabase = mongoClient.GetDatabase("Job_Analytics"); 
-    return DatabaseContext.Create(mongoDatabase);
+    options.AddDefaultPolicy(policy => policy.AllowAnyHeader()
+        .AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:3000"));
 });
 
 builder.Services.AddSwaggerGen();
@@ -31,6 +34,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+
+
+app.UseCors();
+
+app.UseAuthorization();
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
