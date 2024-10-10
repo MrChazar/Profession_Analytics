@@ -17,7 +17,7 @@ namespace backend.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<JobOffer> GetJobOffers()
+        public IEnumerable<JobOffer> JobOffers()
         {
             return _jobService.GetAllJobs();
         }
