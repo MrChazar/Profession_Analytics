@@ -2,6 +2,7 @@
 using MongoDB.Driver;
 using Microsoft.AspNetCore.Mvc;
 using backend.Application.Interfaces;
+using backend.Domain.DTOs;
 
 namespace backend.Controllers
 {
@@ -17,9 +18,17 @@ namespace backend.Controllers
         }
 
         [HttpGet]
+        [Route("Jobs")]
         public IEnumerable<JobOffer> JobOffers()
         {
             return _jobService.GetAllJobs();
         }
+
+        [HttpGet]
+        [Route("JobTimeSeries")]
+        public IEnumerable<JobTimeSeries> JobTimeSeries() 
+        {
+            return _jobService.GetJobTimeSeries();
+        } 
     }
 }

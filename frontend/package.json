@@ -10,6 +10,7 @@
     "@types/node": "^16.18.112",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.0",
+    "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "d3": "^7.9.0",
     "d3.js": "^0.0.2-security",

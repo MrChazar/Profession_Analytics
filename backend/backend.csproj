@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\DTOs\" />
     <Folder Include="Tests\" />
 	<Folder Include="Api\" />
   </ItemGroup>
