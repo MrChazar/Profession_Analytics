@@ -1,41 +1,19 @@
-\documentclass{article}
-\usepackage{hyperref}
-\title{Profession Analytics}
-\date{}
+# Profession Analytics
 
-\begin{document}
+## Overview
 
-\maketitle
+**Profession Analytics** is a .NET-based application designed to analyze job offers data. The project provides insights into job market trends, such as salary averages, publication dates, and more. The system processes and aggregates job-related data from MongoDB, offering a series of RESTful endpoints for customized data retrieval.
 
-\section{Overview}
+## Technology Stack
 
-\textbf{Profession Analytics} is a .NET-based application designed to analyze job offers data. The project provides insights into job market trends, such as salary averages, publication dates, and more. The system processes and aggregates job-related data from MongoDB, offering a series of RESTful endpoints for customized data retrieval.
+- **Backend:** ASP.NET Core
+- **Database:** MongoDB
+- **Language (Backend):** C#
+- **Frontend:** React
+- **Language (Frontend):** TypeScript
 
+## Setup Instructions
 
-\section{Technology Stack}
-
-\begin{itemize}
-    \item \textbf{Backend:} ASP.NET Core
-    \item \textbf{Database:} MongoDB
-    \item \textbf{Language:} C\#
-    \item \textbf{Frontend:} React 
-    \item \textbf{Language:} TypeScript
-\end{itemize}
-
-
-\section{Setup Instructions}
-
-\begin{enumerate}
-    \item Clone the repository:
-    \begin{verbatim}
-    git clone https://github.com/your-repo/profession-analytics.git
-    \end{verbatim}
-    
-   
-\end{enumerate}
-
-\section{License}
-
-This project is licensed under the MIT License.
-
-\end{document}
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-repo/profession-analytics.git
