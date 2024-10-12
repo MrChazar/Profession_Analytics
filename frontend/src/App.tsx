@@ -10,24 +10,33 @@ const App: React.FC = () => {
   
 
   const url = "https://localhost:7281";
-  debugger
-  const [result, setResult] = useState<{ date: string; value: number }[]>([]);
+  const [timeSerie, setTimeSerie] = useState<{ date: string; value: number }[]>([]);
+  const [earningSerie, setEarningSerie] = useState<{ date: string; value: number }[]>([]);
 
   const GetJobTimeSerie = () => {
     axios.get(url + "/Job/JobTimeSeries")
       .then(response => {
-        console.log("Odpowiedź z API:", response.data);
-        setResult(response.data);
-        window.alert("Pobrano pomyślnie");
+        setTimeSerie(response.data);
       })
       .catch(error => {
         console.error("Błąd Axios:", error);
-        window.alert("Wystąpił błąd");
+      });
+  };
+
+  const GetAverageTimeSerie = () => {
+    axios.get(url + "/Job/DailyAverageEarning")
+      .then(response => {
+        console.log(response.data);
+        setEarningSerie(response.data);
+      })
+      .catch(error => {
+        console.error("Błąd Axios:", error);
       });
   };
 
   useEffect(() => {
     GetJobTimeSerie();
+    GetAverageTimeSerie();
   }, []); 
 
    
@@ -37,24 +46,59 @@ const App: React.FC = () => {
     <div className="App">
       <nav className="navbar navbar-light bg-light">
         <div className="container">
+          <link rel="icon" type="image/x-icon" href="/img/favicon.ico"></link>
           <span className="navbar-brand mb-0 h1">Profession Analytics</span>
           <button className="btn btn-primary">Strona Główna</button>
         </div>
       </nav>
+      
+      <div className="container justify-content-center align-items-center">
 
-      <div className="container my-5 text-center">
-        <h1 className="text-center text-light">Wykresy:</h1>
-        
-        <div className="grid">
+        <div id="ChartSelector">
+          <h1 className='text-dark'>Kreator Wykresów</h1>
+          <form>
+            <div className="form-group d-flex">
+              <label>Typy Wykresów zawód:</label>
+              <select className="form-control" id="exampleFormControlSelect1">
+                <option>Liniowy</option>
+                <option>Kołowy</option>
+              </select>
+
+              <label >Pole x:</label>
+              <select className="form-control" id="exampleFormControlSelect1">
+                <option>Data</option>
+                <option>Wartość</option>
+              </select>
+
+              <label >Pole y:</label>
+              <select className="form-control" id="exampleFormControlSelect1">
+                <option>Data</option>
+                <option>Wartość</option>
+              </select>
+            </div>
+
+            <button id='submit' type="submit" className="btn btn-dark">Wybierz</button>
+
+          </form>
+        </div>
+
+        <div id="rightcontainer" className="flex-grow-1 container my-5 text-center">
 
           <div>
             <h2 className='text-light'>Oferty dodane w czasie</h2>
-            <LineChart data={result} width={500} height={400} />
+            <LineChart data={timeSerie} width={1200} height={500} />
+          </div>
+
+          <div>
+            <h2 className='text-light'>Średnie zarobki dodanych ofert</h2>
+            <LineChart data={earningSerie} width={1200} height={500} />
           </div>
 
         </div>
 
       </div>
+
+      
 
       <footer className="bg-light py-3">
         <div className="container text-center">

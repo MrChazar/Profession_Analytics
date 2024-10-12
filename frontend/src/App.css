@@ -43,3 +43,32 @@
   justify-content: space-between; 
 }
 
+#ChartSelector
+{
+  height: 20%;
+  margin: 25px;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.form-group
+{
+  text-align: left;
+}
+
+.form-control
+{
+  background-color: black;
+  color: white;
+  width: 20%;
+}
+
+label
+{
+  margin: 5px;
+}
+
+#submit
+{
+  margin: 20px;
+}

@@ -2,6 +2,7 @@
 using backend.Domain.DTOs;
 using backend.Domain.Entities;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 namespace backend.Application.Services 
 {
     public class JobService : IJobService
@@ -36,10 +37,38 @@ namespace backend.Application.Services
                     Date = group.Key,
                     Value = group.Select(job => job.slug).Distinct().Count()
                 })
+                .OrderBy(job => job.Date) 
                 .ToList();
 
             return jobTimeSeries;
         }
+
+        /// <summary>
+        /// Get a time series of average daily earnings of added jobs
+        /// </summary>
+        public IEnumerable<JobTimeSeries> GetAverageEarningTimeSeries()
+        {
+            IEnumerable<JobOffer> jobs = _jobOffersCollection.Find(_ => true).ToList();
+
+            var jobTimeSeries = jobs
+                .GroupBy(job => job.publishedAt.ToString("yyyy-MM-dd"))
+                .Select(group => new JobTimeSeries
+                {
+                    Date = group.Key,
+                    Value = (int)group
+                        .Where(job => job.employmentTypes != null)
+                        .SelectMany(job => job.employmentTypes) 
+                        .Where(type => type.from_pln.HasValue && type.to_pln.HasValue) 
+                        .Select(type => (type.from_pln.Value + type.to_pln.Value) / 2) 
+                        .DefaultIfEmpty(0) 
+                        .Average() 
+                })
+                .OrderBy(job => job.Date) 
+                .ToList();
+
+            return jobTimeSeries;
+        }
+
 
     }
 }

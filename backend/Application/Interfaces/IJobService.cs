@@ -6,5 +6,6 @@ namespace backend.Application.Interfaces
     {
         public IEnumerable<JobOffer> GetAllJobs();
         public IEnumerable<JobTimeSeries> GetJobTimeSeries();
+        public IEnumerable<JobTimeSeries> GetAverageEarningTimeSeries();
     }
 }

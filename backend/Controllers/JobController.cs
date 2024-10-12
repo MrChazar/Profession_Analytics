@@ -29,6 +29,14 @@ namespace backend.Controllers
         public IEnumerable<JobTimeSeries> JobTimeSeries() 
         {
             return _jobService.GetJobTimeSeries();
-        } 
+        }
+        
+        [HttpGet]
+        [Route("DailyAverageEarning")]
+        public IEnumerable<JobTimeSeries> AverageEarningTimeSeries() 
+        {
+            return _jobService.GetAverageEarningTimeSeries();
+        }
+            
     }
 }
