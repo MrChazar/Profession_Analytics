@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import LineChart from './components/LineChart';
+import StackedAreaChart from './components/StackedAreaChart'; 
 import axios from 'axios';
 import { useState } from 'react';
 
@@ -34,6 +35,21 @@ const App: React.FC = () => {
       });
   };
 
+  interface DataPoint {
+    date: string;
+    [key: string]: number | string; 
+  }
+
+  const sampleData: DataPoint[] = [
+    { date: '2023-01-01', categoryA: 30, categoryB: 20, categoryC: 50 },
+    { date: '2023-02-01', categoryA: 20, categoryB: 30, categoryC: 40 },
+    { date: '2023-03-01', categoryA: 40, categoryB: 10, categoryC: 60 },
+    { date: '2023-04-01', categoryA: 50, categoryB: 40, categoryC: 70 },
+    { date: '2023-05-01', categoryA: 60, categoryB: 50, categoryC: 80 },
+    { date: '2023-06-01', categoryA: 70, categoryB: 60, categoryC: 90 }
+  ];
+  
+
   useEffect(() => {
     GetJobTimeSerie();
     GetAverageTimeSerie();
@@ -62,6 +78,8 @@ const App: React.FC = () => {
               <select className="form-control" id="exampleFormControlSelect1">
                 <option>Liniowy</option>
                 <option>Kołowy</option>
+                <option>Powierzchniowy</option>
+                <option></option>
               </select>
 
               <label >Pole x:</label>
@@ -74,6 +92,13 @@ const App: React.FC = () => {
               <select className="form-control" id="exampleFormControlSelect1">
                 <option>Data</option>
                 <option>Wartość</option>
+              </select>
+
+              <label >Częstotliwość:</label>
+              <select className="form-control" id="exampleFormControlSelect1">
+                <option>Dzienna</option>
+                <option>Miesięczna</option>
+                <option>Roczna</option>
               </select>
             </div>
 
@@ -92,6 +117,11 @@ const App: React.FC = () => {
           <div>
             <h2 className='text-light'>Średnie zarobki dodanych ofert</h2>
             <LineChart data={earningSerie} width={1200} height={500} />
+          </div>
+
+          <div>
+            <h2 className='text-light'>Doświadczenie dodanych prac</h2>
+            <StackedAreaChart data={sampleData} width={1200} height={500} />
           </div>
 
         </div>
