@@ -1,7 +1,0 @@
-@backend_HostAddress = http://localhost:7281
-
-
-
-GET {{backend_HostAddress}}/GetJobOffers/
-Accept: application/json
-###
