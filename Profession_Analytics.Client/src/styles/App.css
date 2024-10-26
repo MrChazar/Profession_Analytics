@@ -1,6 +1,26 @@
 .App {
   text-align: center;
   background-color: #282c00;
+  height: 100%;
+  width: 100%;
+}
+
+#navbar
+{
+  height: 10%;
+  width: 100%;
+}
+
+#content
+{
+  height: 80%;
+  width: 100%;
+}
+
+#footer
+{
+  height: 10%;
+  width: 100%;
 }
 
 .App-logo {
@@ -45,8 +65,8 @@
 
 #ChartSelector
 {
-  height: 20%;
-  margin: 25px;
+  height: 40%;
+  margin: 5%;
   background-color: white;
   border-radius: 10px;
 }
@@ -71,4 +91,11 @@ label
 #submit
 {
   margin: 20px;
+}
+
+#rightcontainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  justify-content: center; 
 }
