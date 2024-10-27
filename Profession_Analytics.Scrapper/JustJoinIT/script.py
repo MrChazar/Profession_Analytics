@@ -88,7 +88,7 @@ def set_up_webdriver(binary_location=None, driver_location=None):
     edge_options.use_chromium = True
     edge_options.binary_location = r'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'
     driver_service = Service(
-        r"C:\Users\jakub\OneDrive\Dokumenty\GitHub\Profession_Analytics\scrapper\JustJoinIT\edgedriver_win64\msedgedriver.exe")  # you must change to your webdriver location
+        r"C:\Users\jakub\OneDrive\Dokumenty\GitHub\Profession_Analytics\Profession_Analytics.Scrapper\JustJoinIT\edgedriver_win64\msedgedriver.exe")  # you must change to your webdriver location
     edge_options.set_capability("ms:edgeOptions", capabilities)
     driver = webdriver.Edge(service=driver_service, options=edge_options)
     return driver

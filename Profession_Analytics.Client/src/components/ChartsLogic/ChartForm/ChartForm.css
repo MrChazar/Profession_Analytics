@@ -1,0 +1,11 @@
+.form-control
+{
+  background-color: black;
+  color: white;
+  width: 10%;
+}
+
+.form-group
+{
+  text-align: left;
+}

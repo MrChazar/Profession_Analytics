@@ -2,11 +2,16 @@ import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/App.css';
 import axios from 'axios';
-import LineChart from './components/LineChart';
+import LineChart from './components/Charts/LineChart';
+import ChartForm from './components/ChartsLogic/ChartForm/ChartForm';
 
 const App: React.FC = () => {
+
   const [timeSerie, setTimeSerie] = useState<{ date: string; value: number }[]>([]);
-  const [earningSerie, setEarningSerie] = useState<{ date: string; value: number }[]>([]);
+
+  const handleFormSubmit = (data: { chartType: string; xAxis: string; yAxis: string; frequency: string }) => {
+    console.log("Form submitted data:", data);
+  };
 
   const url = "https://localhost:7281";
 
@@ -20,19 +25,8 @@ const App: React.FC = () => {
           });
   };
 
-  const GetAverageTimeSerie = () => {
-      axios.get(`${url}/Job/DailyAverageEarning`)
-          .then(response => {
-              setEarningSerie(response.data);
-          })
-          .catch(error => {
-              console.error("Błąd Axios:", error);
-          });
-  };
-
   useEffect(() => {
       GetJobTimeSerie();
-      GetAverageTimeSerie();
   }, []); 
 
   return (
@@ -46,43 +40,15 @@ const App: React.FC = () => {
       </nav>
       
       <div className="container justify-content-center align-items-center" id="content">
-        <div id="ChartSelector">
-              <h1 className='text-dark'>Kreator Wykresów</h1>
-              <form >
-                  <div className="form-group d-flex">
-                      <label>Typy Wykresów:</label>
-                      <select className="form-control" onChange={(e) => {/* Handle chart type change */}}>
-                          <option>Liniowy</option>
-                          <option>Kołowy</option>
-                          <option>Powierzchniowy</option>
-                      </select>
-
-                      <label>Oś x:</label>
-                      <select className="form-control" >
-                          <option>Data</option>
-                          <option>Wartość</option>
-                      </select>
-
-                      <label>Oś y:</label>
-                      <select className="form-control">
-                          <option>Data</option>
-                          <option>Wartość</option>
-                      </select>
-
-                      <label>Częstotliwość:</label>
-                      <select className="form-control">
-                          <option>Dzienna</option>
-                          <option>Miesięczna</option>
-                          <option>Roczna</option>
-                      </select>
-                  </div>
-                  <button id='submit' type="submit" className="btn btn-dark">Wybierz</button>
-              </form>
+          <div id="ChartSelector">
+            <ChartForm onSubmit={handleFormSubmit} />
           </div>
 
           <div id="rightcontainer" className="flex-grow-1 container text-center">
             <h2 className='text-light'>Wykres:</h2>
-            <LineChart data={timeSerie} width={800} height={400} /> {/* Używamy danych do wykresu */}
+            <>
+            ?{timeSerie.length > 0 && <LineChart data={timeSerie} width={800} height={400} />}
+            </>
           </div>
 
       </div>
