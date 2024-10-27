@@ -56,19 +56,34 @@ const ChartForm: React.FC<FormComponentProps> = ({ onSubmit }) => {
             <option value="Powierzchniowy">Powierzchniowy</option>
           </select>
           
-
           <label htmlFor="xAxis">Oś x:</label>
           <select name="xAxis" value={formData.xAxis} onChange={handleChange} className="form-control">
             <option value="">Wybierz:</option>
+            
+            {(formData.chartType === 'Liniowy' || formData.chartType === 'Powierzchniowy')  && 
             <option value="Data">Data</option>
-            <option value="Wartość">Wartość</option>
+            
+            }
+
           </select>
 
           <label htmlFor="yAxis">Oś y:</label>
           <select name="yAxis" value={formData.yAxis} onChange={handleChange} className="form-control">
             <option value="">Wybierz:</option>
-            <option value="Data">Data</option>
-            <option value="Wartość">Wartość</option>
+
+            {formData.chartType === 'Liniowy' && (
+              <>
+              <option value="Dodane Oferty">Dodane Oferty</option>
+              <option value="Zarobki">Zarobki</option>
+              </>
+            )}
+
+            {formData.chartType === 'powierzchniowy' &&
+              <>
+              <option value="Doświadczenie">Doświadczenie</option>
+              </> 
+            }
+
           </select>
 
           <label htmlFor="frequency">Częstotliwość:</label>
