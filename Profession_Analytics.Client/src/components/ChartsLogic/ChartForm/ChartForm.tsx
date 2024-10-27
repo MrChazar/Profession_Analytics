@@ -47,7 +47,7 @@ const ChartForm: React.FC<FormComponentProps> = ({ onSubmit }) => {
       <h1 className="text-dark">Kreator Wykresów</h1>
       <form onSubmit={handleSubmit}>
         <div className="form-group d-flex">
-          
+
           <label htmlFor="chartType">Typy Wykresów:</label>
           <select name="chartType" value={formData.chartType} onChange={handleChange} className="form-control">
             <option value="">Wybierz:</option>

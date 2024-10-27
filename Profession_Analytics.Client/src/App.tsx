@@ -1,33 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/App.css';
-import axios from 'axios';
-import LineChart from './components/Charts/LineChart';
 import ChartForm from './components/ChartsLogic/ChartForm/ChartForm';
+import ShowChart from './components/ChartsLogic/ShowChart/ShowChart';
 
 const App: React.FC = () => {
 
-  const [timeSerie, setTimeSerie] = useState<{ date: string; value: number }[]>([]);
+  const [data, setData] = useState<{ chartType: string; xAxis: string; yAxis: string; frequency: string } | null>(null);
 
-  const handleFormSubmit = (data: { chartType: string; xAxis: string; yAxis: string; frequency: string }) => {
-    console.log("Form submitted data:", data);
+  const handleFormSubmit = (formData: { chartType: string; xAxis: string; yAxis: string; frequency: string }) => 
+  {
+    setData(formData);
   };
-
-  const url = "https://localhost:7281";
-
-  const GetJobTimeSerie = () => {
-      axios.get(`${url}/Job/JobTimeSeries`)
-          .then(response => {
-              setTimeSerie(response.data);
-          })
-          .catch(error => {
-              console.error("Błąd Axios:", error);
-          });
-  };
-
-  useEffect(() => {
-      GetJobTimeSerie();
-  }, []); 
 
   return (
     <div className="App">
@@ -43,12 +27,9 @@ const App: React.FC = () => {
           <div id="ChartSelector">
             <ChartForm onSubmit={handleFormSubmit} />
           </div>
-
           <div id="rightcontainer" className="flex-grow-1 container text-center">
             <h2 className='text-light'>Wykres:</h2>
-            <>
-            ?{timeSerie.length > 0 && <LineChart data={timeSerie} width={800} height={400} />}
-            </>
+            {data ? (<ShowChart chartType={data.chartType} xAxis={data.xAxis} yAxis={data.yAxis} frequency={data.frequency} />) : null}
           </div>
 
       </div>

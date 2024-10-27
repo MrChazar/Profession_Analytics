@@ -2,15 +2,15 @@ import React from 'react';
 import { LineChart, axisClasses } from '@mui/x-charts';
 
 interface LineChartProps {
-  data: { date: string; value: number }[];
+  data: { xAxis: string; yAxis: number }[];
   width: number;
   height: number;
 }
 
 const MuiLineChart: React.FC<LineChartProps> = ({ data, width, height }) => {
   const formattedData = data.map(d => ({
-    x: new Date(d.date), 
-    y: d.value,
+    x: new Date(d.xAxis), 
+    y: d.yAxis,
   }));
   
 
