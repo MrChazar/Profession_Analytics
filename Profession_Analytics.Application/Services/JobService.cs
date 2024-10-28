@@ -22,6 +22,11 @@ namespace Profession_Analytics.Application.Services
         }
 
         /// <summary>
+        /// Creates chart data for chose chart type
+        /// </summary>
+
+
+        /// <summary>
         /// Get every information of every job availble
         /// </summary>
         public IEnumerable<JobOffer> GetAllJobs()

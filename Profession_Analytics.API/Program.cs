@@ -12,6 +12,7 @@ builder.Services.AddSingleton<IMongoClient>(s =>
 });
 
 builder.Services.AddScoped<IJobService, JobService>();
+builder.Services.AddScoped<IChartService, ChartService>();
 
 builder.Services.AddCors(options =>
 {
