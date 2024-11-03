@@ -20,9 +20,24 @@ namespace Profession_Analytics.Application.Services
             _jobOffersCollection = database.GetCollection<JobOffer>("job_offers");
         }
 
+        /// <summary>
+        /// Get a data for specific type of chart
+        /// </summary>
         public IEnumerable<ChartData> GetChartData(string type, string x, string y, string frequency)
         {
-            throw new NotImplementedException();
+            IEnumerable<JobOffer> offers = _jobOffersCollection.Find(_ => true).ToList();
+
+            var data = offers
+                .GroupBy(job => job.publishedAt.ToString("yyyy-MM-dd"))
+                .Select(group => new ChartData
+                {
+                    x = group.Key,
+                    y = group.Select(job => job.slug).Distinct().Count()
+                })
+                .OrderBy(job => job.x)
+                .ToList();
+
+            return data;
         }
     }
 }

@@ -15,17 +15,25 @@ interface FormDataProps {
 
 const ShowChart: React.FC<FormDataProps> = ({ chartType, xAxis, yAxis, frequency }) => {
     debugger
+    
 
     const [lineChartData, setlineChartData] = useState<{ xAxis: string; yAxis: number }[]>([]);
 
     const GetLineChartData = () => {
-        axios.get(`${API_URL}/Job/JobTimeSeries`)
-            .then(response => {
-                setlineChartData(response.data.map((item: { date: string; value: number }) => ({ xAxis: item.date, yAxis: item.value })));
-            })
-            .catch(error => {
-                console.error("Błąd Axios:", error);
-            });
+        axios.get(`${API_URL}/Create`, {
+            params: {
+                type: chartType,
+                x: xAxis,
+                y: yAxis,
+                frequency: frequency
+            }
+        })
+        .then(response => {
+            setlineChartData(response.data.map((item: { x: string; y: number }) => ({ xAxis: item.x, yAxis: item.y })));
+        })
+        .catch(error => {
+            console.error("Błąd Axios:", error);
+        });
     };
 
     switch(chartType) 

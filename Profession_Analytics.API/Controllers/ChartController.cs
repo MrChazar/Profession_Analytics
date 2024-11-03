@@ -18,7 +18,7 @@ namespace Profession_Analytics.API.Controllers
         public IActionResult Create([FromQuery] string type, 
             [FromQuery] string x, [FromQuery] string y, [FromQuery] string frequency)
         {
-            return Ok(_chartService.GetChartData());
+            return Ok(_chartService.GetChartData(type, x, y, frequency));
         }
 
 

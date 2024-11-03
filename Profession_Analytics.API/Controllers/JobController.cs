@@ -33,7 +33,7 @@ namespace Profession_Analytics.API.Controllers
         [Route("DailyAverageEarning")]
         public IActionResult AverageEarningTimeSeries()
         {
-            return Ok(_jobService.GetChartData());
+            return Ok(_jobService.GetAverageEarningTimeSeries());
         }
 
     }
