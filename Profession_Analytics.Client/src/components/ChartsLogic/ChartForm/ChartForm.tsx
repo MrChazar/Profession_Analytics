@@ -39,7 +39,6 @@ const ChartForm: React.FC<FormComponentProps> = ({ onSubmit }) => {
       return;
     }
     onSubmit(formData);
-    setFormData({ chartType: '', xAxis: '', yAxis: '', frequency: '' });
   };
 
   return (
@@ -56,9 +55,9 @@ const ChartForm: React.FC<FormComponentProps> = ({ onSubmit }) => {
             className="form-select form-select-sm bg-dark text-light"
           >
             <option value="">Wybierz:</option>
-            <option value="Liniowy">Liniowy</option>
-            <option value="Kołowy">Kołowy</option>
-            <option value="Powierzchniowy">Powierzchniowy</option>
+            <option value="Lined">Liniowy</option>
+            <option value="Circle">Kołowy</option>
+            <option value="Area">Powierzchniowy</option>
           </select>
         </div>
 
@@ -71,8 +70,8 @@ const ChartForm: React.FC<FormComponentProps> = ({ onSubmit }) => {
             className="form-select form-select-sm bg-dark text-light"
           >
             <option value="">Wybierz:</option>
-            {(formData.chartType === 'Liniowy' || formData.chartType === 'Powierzchniowy') && (
-              <option value="Data">Data</option>
+            {(formData.chartType === 'Lined' || formData.chartType === 'Area') && (
+              <option value="publishedAt">Data</option>
             )}
           </select>
         </div>
@@ -86,14 +85,17 @@ const ChartForm: React.FC<FormComponentProps> = ({ onSubmit }) => {
             className="form-select form-select-sm bg-dark text-light"
           >
             <option value="">Wybierz:</option>
-            {formData.chartType === 'Liniowy' && (
+            {formData.chartType === 'Lined' && (
               <>
-                <option value="Dodane Oferty">Dodane Oferty</option>
-                <option value="Zarobki">Zarobki</option>
+                <option value="slug">Dodane Oferty</option>
+                <option value="employmentTypes">Zarobki</option>
               </>
             )}
-            {formData.chartType === 'powierzchniowy' && (
-              <option value="Doświadczenie">Doświadczenie</option>
+            {formData.chartType === 'Area' && (
+              <>
+                <option value="experienceLevel">Doświadczenie</option>
+                <option value="city">Miasto</option> 
+              </>
             )}
           </select>
         </div>
@@ -107,9 +109,9 @@ const ChartForm: React.FC<FormComponentProps> = ({ onSubmit }) => {
             className="form-select form-select-sm bg-dark text-light"
           >
             <option value="">Wybierz:</option>
-            <option value="Dzienna">Dzienna</option>
-            <option value="Miesięczna">Miesięczna</option>
-            <option value="Roczna">Roczna</option>
+            <option value="yyyy-MM-dd">Dzienna</option>
+            <option value="yyyy-MM">Miesięczna</option>
+            <option value="yyyy">Roczna</option>
           </select>
         </div>
       </div>

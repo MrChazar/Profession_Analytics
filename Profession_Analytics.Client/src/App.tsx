@@ -19,7 +19,11 @@ const App: React.FC = () => {
         <div className="container">
           <link rel="icon" type="image/x-icon" href="/img/favicon.ico"></link>
           <span className="navbar-brand mb-0 h1">Profession Analytics</span>
-          <button className="btn btn-dark">Strona Główna</button>
+          <div>
+            <button className="btn btn-dark m-1">Kreator Wykresów</button>
+            <button className="btn btn-dark m-1">Statystyki zawodu</button> 
+          </div>
+          
         </div>
       </nav>
       
