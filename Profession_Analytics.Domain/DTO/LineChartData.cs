@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Profession_Analytics.Domain.DTO
 {
-    public class ChartData
+    public class LineChartData
     {
         public string x { get; set; }
         public int y { get; set; }

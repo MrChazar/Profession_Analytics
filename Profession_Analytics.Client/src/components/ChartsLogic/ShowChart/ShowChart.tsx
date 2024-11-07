@@ -4,6 +4,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { API_URL } from '../../../config/config';
 import LineChart from '../../Charts/LineChart';
+import StackedAreaChart from '../../Charts/StackedAreaChart';
 
 interface FormDataProps {
     chartType: string;
@@ -14,6 +15,7 @@ interface FormDataProps {
 
 const ShowChart: React.FC<FormDataProps> = ({ chartType, xAxis, yAxis, frequency }) => {
     const [lineChartData, setlineChartData] = useState<{ xAxis: string; yAxis: number }[]>([]);
+    const [areaChartData, setareaChartData] = useState<{ x: string; y: { item1: string; item2: number }[]}[]>([]);
 
     useEffect(() => {
         if (chartType === 'Lined') {
@@ -32,11 +34,29 @@ const ShowChart: React.FC<FormDataProps> = ({ chartType, xAxis, yAxis, frequency
                 console.error("Błąd Axios:", error);
             });
         }
+        else if (chartType === 'Area') {
+            axios.get(`${API_URL}/Create`, {
+                params: {
+                    type: chartType,
+                    x: xAxis,
+                    y: yAxis,
+                    frequency: frequency
+                }
+            })
+            .then(response => {
+                setareaChartData(response.data.map((item: { x: string; y: [string, number] }) => ({ xAxis: item.x, yAxis: item.y })));
+            })
+            .catch(error => {
+                console.error("Błąd Axios:", error);
+            });
+        }
     }, [chartType, xAxis, yAxis, frequency]);
 
     return (
         <div id="carry">
             {lineChartData.length > 0 ? (<LineChart data={lineChartData} width={800} height={400} />) : null}
+            {areaChartData.length > 0 ? (<StackedAreaChart data={areaChartData} width={800} height={400} />) : null}
+
         </div>
     );
 };

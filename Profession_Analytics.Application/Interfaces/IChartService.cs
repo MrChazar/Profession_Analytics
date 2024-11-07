@@ -9,6 +9,7 @@ namespace Profession_Analytics.Application.Interfaces
 {
     public interface IChartService
     {
-        public IEnumerable<ChartData> GetChartData(string type, string x, string y, string frequency);
+        public IEnumerable<LineChartData> GetLineChartData(string x, string y, string frequency);
+        public IEnumerable<AreaChartData> GetAreaChartData(string x, string y, string frequency);
     }
 }

@@ -18,7 +18,15 @@ namespace Profession_Analytics.API.Controllers
         public IActionResult Create([FromQuery] string type, 
             [FromQuery] string x, [FromQuery] string y, [FromQuery] string frequency)
         {
-            return Ok(_chartService.GetChartData(type, x, y, frequency));
+            if(type == "Lined") 
+            {
+                return Ok(_chartService.GetLineChartData(x, y, frequency));
+            }
+            if( type == "Area") 
+            {
+                return Ok(_chartService.GetAreaChartData(x, y, frequency));
+            }
+            return Ok("dupa");
         }
 
 
