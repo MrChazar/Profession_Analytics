@@ -17,8 +17,13 @@ const ShowChart: React.FC<FormDataProps> = ({ chartType, xAxis, yAxis, frequency
     const [lineChartData, setlineChartData] = useState<{ xAxis: string; yAxis: number }[]>([]);
     const [areaChartData, setareaChartData] = useState<{  xAxis: string; yAxis: { item1: string; item2: number }[] }[]>([]);
 
+    const emptyChartData = () => {
+        setlineChartData([]);
+        setareaChartData([]);
+    }
 
     useEffect(() => {
+        emptyChartData();
         if (chartType === 'Lined') {
             axios.get(`${API_URL}/Create`, {
                 params: {

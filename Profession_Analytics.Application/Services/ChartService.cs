@@ -66,6 +66,44 @@ namespace Profession_Analytics.Application.Services
                     .OrderBy(job => job.x)
                     .ToList();
             }
+            else if (x == "publishedAt" && y == "workplaceType")
+            {
+                data = offers
+                    .GroupBy(job => job.publishedAt.ToString(frequency))
+                    .Select(group => new AreaChartData
+                    {
+                        x = group.Key,
+                        y = group
+                            .Where(job => !string.IsNullOrEmpty(job.workplaceType))
+                            .GroupBy(job => job.workplaceType)
+                            .Select(subGroup => new Tuple<string, int>(
+                                subGroup.Key,
+                                subGroup.Count()
+                            ))
+                            .ToList()
+                    })
+                    .OrderBy(job => job.x)
+                    .ToList();
+            }
+            else if (x == "publishedAt" && y == "remoteInterview")
+            {
+                data = offers
+                    .GroupBy(job => job.publishedAt.ToString(frequency))
+                    .Select(group => new AreaChartData
+                    {
+                        x = group.Key,
+                        y = group
+                            .Where(job => !string.IsNullOrEmpty(job.remoteInterview.ToString()))
+                            .GroupBy(job => job.remoteInterview.ToString())
+                            .Select(subGroup => new Tuple<string, int>(
+                                subGroup.Key,
+                                subGroup.Count()
+                            ))
+                            .ToList()
+                    })
+                    .OrderBy(job => job.x)
+                    .ToList();
+            }
 
             return data;
         }

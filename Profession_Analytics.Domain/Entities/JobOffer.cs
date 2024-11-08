@@ -12,6 +12,7 @@ namespace Profession_Analytics.Domain.Entities
         public string _id { get; set; }
 
         public string slug { get; set; }
+        public List<string> requiredSkills { get; set; }
 
         public string title { get; set; }
         public string workplaceType { get; set; }

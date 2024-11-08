@@ -94,7 +94,9 @@ const ChartForm: React.FC<FormComponentProps> = ({ onSubmit }) => {
             {formData.chartType === 'Area' && (
               <>
                 <option value="experienceLevel">Doświadczenie</option>
-                <option value="city">Miasto</option> 
+                <option value="city">Miasto</option>
+                <option value="workplaceType">Zatrudnienie</option>
+                <option value="remoteInterview">Forma rekrutacji</option>
               </>
             )}
           </select>
