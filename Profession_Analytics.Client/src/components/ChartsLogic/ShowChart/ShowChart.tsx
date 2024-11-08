@@ -15,7 +15,8 @@ interface FormDataProps {
 
 const ShowChart: React.FC<FormDataProps> = ({ chartType, xAxis, yAxis, frequency }) => {
     const [lineChartData, setlineChartData] = useState<{ xAxis: string; yAxis: number }[]>([]);
-    const [areaChartData, setareaChartData] = useState<{ x: string; y: { item1: string; item2: number }[]}[]>([]);
+    const [areaChartData, setareaChartData] = useState<{  xAxis: string; yAxis: { item1: string; item2: number }[] }[]>([]);
+
 
     useEffect(() => {
         if (chartType === 'Lined') {

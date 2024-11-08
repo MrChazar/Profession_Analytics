@@ -39,7 +39,7 @@ const App: React.FC = () => {
       </div>
 
       <footer className="bg-light py-3" id="footer">
-        <div className="container text-center">
+        <div className="container text-center text-dark">
           <span>Wykonał MrChazar</span>
         </div>
       </footer>

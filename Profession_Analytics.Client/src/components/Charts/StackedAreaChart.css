@@ -1,0 +1,16 @@
+body
+{
+    color: white !important;
+}
+
+.MuiChartsLegend-text {
+    fill: #FFFFFF !important;
+  }
+
+
+
+.MuiChartsLegend-series-auto-generated-id-0
+{
+    color: #FFFFFF !important;
+}
+
