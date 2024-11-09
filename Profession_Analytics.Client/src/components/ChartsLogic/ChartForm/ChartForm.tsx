@@ -96,7 +96,9 @@ const ChartForm: React.FC<FormComponentProps> = ({ onSubmit }) => {
                 <option value="experienceLevel">Doświadczenie</option>
                 <option value="city">Miasto</option>
                 <option value="workplaceType">Zatrudnienie</option>
-                <option value="remoteInterview">Forma rekrutacji</option>
+                <option value="remoteInterview">Zdalna rekrutacja</option>
+                <option value="openToHireUkrainians">Przyjazny dla ukraińców</option>
+                <option value="employmentType">Rodzaj umowy</option>
               </>
             )}
           </select>

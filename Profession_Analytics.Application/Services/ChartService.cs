@@ -104,6 +104,45 @@ namespace Profession_Analytics.Application.Services
                     .OrderBy(job => job.x)
                     .ToList();
             }
+            else if (x == "publishedAt" && y == "openToHireUkrainians")
+            {
+                data = offers
+                    .GroupBy(job => job.publishedAt.ToString(frequency))
+                    .Select(group => new AreaChartData
+                    {
+                        x = group.Key,
+                        y = group
+                            .Where(job => !string.IsNullOrEmpty(job.openToHireUkrainians.ToString()))
+                            .GroupBy(job => job.openToHireUkrainians.ToString())
+                            .Select(subGroup => new Tuple<string, int>(
+                                subGroup.Key,
+                                subGroup.Count()
+                            ))
+                            .ToList()
+                    })
+                    .OrderBy(job => job.x)
+                    .ToList();
+            }
+            else if (x == "publishedAt" && y == "employmentType")
+            {
+                data = offers
+                    .GroupBy(job => job.publishedAt.ToString(frequency))
+                    .Select(group => new AreaChartData
+                    {
+                        x = group.Key,
+                        y = group
+                            .Where(job => job.employmentTypes != null && job.employmentTypes.Any()) // Check for null or empty list
+                            .SelectMany(job => job.employmentTypes)
+                            .GroupBy(type => type.type) 
+                            .Select(subGroup => new Tuple<string, int>(
+                                subGroup.Key,
+                                subGroup.Count()
+                            ))
+                            .ToList()
+                    })
+                    .OrderBy(job => job.x)
+                    .ToList();
+            }
 
             return data;
         }

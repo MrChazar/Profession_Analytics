@@ -6,13 +6,6 @@ import ShowChart from '..//components/ChartsLogic/ShowChart/ShowChart';
 
 const JobStatistic: React.FC = () => {
 
-  const [data, setData] = useState<{ chartType: string; xAxis: string; yAxis: string; frequency: string } | null>(null);
-
-  const handleFormSubmit = (formData: { chartType: string; xAxis: string; yAxis: string; frequency: string }) => 
-  {
-    setData(formData);
-  };
-
   return (
     <div className="App">
       <nav className="navbar navbar-light bg-light" id="navbar">
