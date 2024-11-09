@@ -143,6 +143,25 @@ namespace Profession_Analytics.Application.Services
                     .OrderBy(job => job.x)
                     .ToList();
             }
+            else if (x == "publishedAt" && y == "workingTime")
+            {
+                data = offers
+                     .GroupBy(job => job.publishedAt.ToString(frequency))
+                     .Select(group => new AreaChartData
+                     {
+                         x = group.Key,
+                         y = group
+                             .Where(job => !string.IsNullOrEmpty(job.workingTime))
+                             .GroupBy(job => job.workingTime)
+                             .Select(subGroup => new Tuple<string, int>(
+                                 subGroup.Key,
+                                 subGroup.Count()
+                             ))
+                             .ToList()
+                     })
+                     .OrderBy(job => job.x)
+                     .ToList();
+            }
 
             return data;
         }

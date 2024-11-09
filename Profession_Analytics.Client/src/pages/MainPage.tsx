@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '..//styles/App.css';
-import ChartForm from '..//components/ChartsLogic/ChartForm/ChartForm';
-import ShowChart from '..//components/ChartsLogic/ShowChart/ShowChart';
 
 const MainPage: React.FC = () => {
   return (
