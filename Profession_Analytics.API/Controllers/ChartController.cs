@@ -15,18 +15,18 @@ namespace Profession_Analytics.API.Controllers
 
         [HttpGet]
         [Route("Create")]
-        public IActionResult Create([FromQuery] string type, 
+        public async Task<IActionResult> Create([FromQuery] string type, 
             [FromQuery] string x, [FromQuery] string y, [FromQuery] string frequency)
         {
             if(type == "Lined") 
             {
-                return Ok(_chartService.GetLineChartData(x, y, frequency));
+                return Ok(await _chartService.GetLineChartData(x, y, frequency));
             }
             if( type == "Area") 
             {
-                return Ok(_chartService.GetAreaChartData(x, y, frequency));
+                return Ok(await _chartService.GetAreaChartData(x, y, frequency));
             }
-            return Ok("dupa");
+            return BadRequest("Żądanie błędne");
         }
 
 

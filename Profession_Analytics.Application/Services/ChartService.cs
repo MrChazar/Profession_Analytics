@@ -23,7 +23,7 @@ namespace Profession_Analytics.Application.Services
         /// <summary>
         /// Get a data for Area Chart
         /// </summary>
-        public IEnumerable<AreaChartData> GetAreaChartData(string x, string y, string frequency)
+        public async Task<IEnumerable<AreaChartData>> GetAreaChartData(string x, string y, string frequency)
         {
             IEnumerable<JobOffer> offers = _jobOffersCollection.Find(_ => true).ToList();
             List<AreaChartData> data = new List<AreaChartData>();
@@ -163,14 +163,14 @@ namespace Profession_Analytics.Application.Services
                      .ToList();
             }
 
-            return data;
+            return await Task.FromResult(data);
         }
 
 
         /// <summary>
         /// Get a data for Line Chart
         /// </summary>
-        public IEnumerable<LineChartData> GetLineChartData(string x, string y, string frequency)
+        public async Task<IEnumerable<LineChartData>> GetLineChartData(string x, string y, string frequency)
         {
             IEnumerable<JobOffer> offers = _jobOffersCollection.Find(_ => true).ToList();
             List<LineChartData> data = new List<LineChartData>();
@@ -204,7 +204,7 @@ namespace Profession_Analytics.Application.Services
                .OrderBy(job => job.x)
                .ToList();
             }
-            return data;
+            return await Task.FromResult(data);
         }
     }
 }

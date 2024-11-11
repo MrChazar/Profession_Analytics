@@ -1,10 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '..//styles/App.css';
+import axios from 'axios';
+import { API_URL } from '../config/config';
 
 const JobStatistic: React.FC = () => {
   
   const [data, setData] = useState<{ title: string; experienceLevel: string[]; type: string[]; workingTime: string[]; workplaceType: string[]  } | null>(null);
+  const [statistics, setStatistics] = useState<{ x: string; y: number }[]>([]); 
+
+    axios.get(`${API_URL}/Create`, {
+      params: {
+          title: data?.title,
+          experienceLevel: data?.experienceLevel,
+          type: data?.type,
+          workingTime: data?.workingTime,
+          workplaceType: data?.workplaceType
+      }
+  })
+  .then(response => {
+    setStatistics(response.data.map((item: { x: string; y: number }) => ({ x: item.x, y: item.y })));
+  })
+  .catch(error => {
+      console.error("Błąd Axios:", error);
+  });
 
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
