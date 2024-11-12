@@ -74,5 +74,19 @@ namespace Profession_Analytics.Application.Services
 
             return jobTimeSeries;
         }
+
+        public async Task<IEnumerable<AreaChartData>> CreateStatistics(string title, IEnumerable<string> experienceLevel, IEnumerable<string> workingTime, IEnumerable<string> workplaceType, IEnumerable<string> type)
+        {
+            IEnumerable<JobOffer> jobs = _jobOffersCollection.Find(_ => true).ToList();
+            var jobStatistics = jobs
+                .Where(job => job.slug.Contains(title, StringComparison.OrdinalIgnoreCase)) 
+                .Where(job => experienceLevel.Contains(job.experienceLevel)) 
+                .Where(job => workingTime.Contains(job.workingTime)) 
+                .Where(job => workplaceType.Contains(job.workplaceType)) 
+                .GroupBy(job => job.publishedAt.ToString("yyyy-MM")) 
+                .ToList();
+
+            return await Task.FromResult(new List<AreaChartData>());
+        }
     }
 }

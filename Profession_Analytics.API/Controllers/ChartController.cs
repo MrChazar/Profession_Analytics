@@ -4,6 +4,8 @@ using Profession_Analytics.Application.Services;
 
 namespace Profession_Analytics.API.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class ChartController : Controller
     {
         private IChartService _chartService;

@@ -9,22 +9,6 @@ const JobStatistic: React.FC = () => {
   const [data, setData] = useState<{ title: string; experienceLevel: string[]; type: string[]; workingTime: string[]; workplaceType: string[]  } | null>(null);
   const [statistics, setStatistics] = useState<{ x: string; y: number }[]>([]); 
 
-    axios.get(`${API_URL}/Create`, {
-      params: {
-          title: data?.title,
-          experienceLevel: data?.experienceLevel,
-          type: data?.type,
-          workingTime: data?.workingTime,
-          workplaceType: data?.workplaceType
-      }
-  })
-  .then(response => {
-    setStatistics(response.data.map((item: { x: string; y: number }) => ({ x: item.x, y: item.y })));
-  })
-  .catch(error => {
-      console.error("Błąd Axios:", error);
-  });
-
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -37,7 +21,38 @@ const JobStatistic: React.FC = () => {
     };
     setData(data);
     console.log(data);
+
+    axios.get(`${API_URL}/Job/Statistics`, {
+      params: {
+          title: data.title,
+          experienceLevel: data.experienceLevel,
+          type: data.type,
+          workingTime: data.workingTime,
+          workplaceType: data.workplaceType
+      },
+      paramsSerializer: params => {
+        return Object.entries(params)
+          .map(([key, value]) => Array.isArray(value) ? value.map(v => `${key}=${v}`).join('&') : `${key}=${value}`)
+          .join('&');
+      }
+    })
+    .then(response => {
+      setStatistics(response.data.map((item: { x: string; y: number }) => ({ x: item.x, y: item.y })));
+    })
+    .catch(error => {
+        console.error("Błąd Axios:", error);
+    });
   };
+
+  useEffect(() => {
+    if (data) {
+      console.log('Data:', data);
+    }
+    if (statistics.length > 0) {
+      console.log('Statistics:', statistics);
+    }
+  }, [data, statistics]);
+
 
   return (
     <div className="App">

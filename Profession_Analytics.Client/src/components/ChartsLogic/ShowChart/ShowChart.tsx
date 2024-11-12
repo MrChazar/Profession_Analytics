@@ -41,7 +41,7 @@ const ShowChart: React.FC<FormDataProps> = ({ chartType, xAxis, yAxis, frequency
             });
         }
         else if (chartType === 'Area') {
-            axios.get(`${API_URL}/Create`, {
+            axios.get(`${API_URL}/Chart/Create`, {
                 params: {
                     type: chartType,
                     x: xAxis,

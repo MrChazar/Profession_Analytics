@@ -2,6 +2,7 @@
 using Profession_Analytics.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,10 @@ namespace Profession_Analytics.Application.Interfaces
         public IEnumerable<JobOffer> GetAllJobs();
         public IEnumerable<JobTimeSeries> GetJobTimeSeries();
         public IEnumerable<JobTimeSeries> GetAverageEarningTimeSeries();
-       
+
+        public Task<IEnumerable<AreaChartData>> CreateStatistics(string title, 
+            IEnumerable<string> experienceLevel,
+            IEnumerable<string> workingtime, IEnumerable<string> workplaceType, IEnumerable<string> type);
+
     }
 }
