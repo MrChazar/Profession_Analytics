@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Profession_Analytics.Domain.DTO
+namespace Profession_Analytics.Domain.DTO;
+
+public class JobStatistic
 {
-    public class JobStatistic
-    {
-        public string Title { get; set; }
-        public int AverageSalary { get; set; }
-    }
+    public string x { get; set; }
+    public int addedOffers { get; set; }
+    public int averageSalary { get; set; }
 }

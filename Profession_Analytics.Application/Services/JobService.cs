@@ -8,60 +8,89 @@ using System.Text;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using Profession_Analytics.Domain.Repositories;
 
-namespace Profession_Analytics.Application.Services
+namespace Profession_Analytics.Application.Services;
+
+public class JobService(IJobOfferRepository jobOfferRepository) : IJobService
 {
-    public class JobService : IJobService
+
+
+    /// <summary>
+    /// Get every information of every job availble
+    /// </summary>
+    public IEnumerable<JobOffer> GetAllJobs()
     {
-        private readonly IMongoCollection<JobOffer> _jobOffersCollection;
+        return jobOfferRepository.GetAll();
+    }
 
-        public JobService(IMongoClient mongoClient)
-        {
-            var database = mongoClient.GetDatabase("Job_Analytics");
-            _jobOffersCollection = database.GetCollection<JobOffer>("job_offers");
-        }
+    /// <summary>
+    /// Get a time serie of added jobs
+    /// </summary>
+    public IEnumerable<JobTimeSeries> GetJobTimeSeries()
+    {
+        IEnumerable<JobOffer> jobs = jobOfferRepository.GetAll();
 
-        /// <summary>
-        /// Get every information of every job availble
-        /// </summary>
-        public IEnumerable<JobOffer> GetAllJobs()
-        {
-            return _jobOffersCollection.Find(_ => true).ToList();
-        }
+        var jobTimeSeries = jobs
+            .GroupBy(job => job.publishedAt.ToString("yyyy-MM-dd"))
+            .Select(group => new JobTimeSeries
+            {
+                Date = group.Key,
+                Value = group.Select(job => job.slug).Distinct().Count()
+            })
+            .OrderBy(job => job.Date)
+            .ToList();
 
-        /// <summary>
-        /// Get a time serie of added jobs
-        /// </summary>
-        public IEnumerable<JobTimeSeries> GetJobTimeSeries()
-        {
-            IEnumerable<JobOffer> jobs = _jobOffersCollection.Find(_ => true).ToList();
+        return jobTimeSeries;
+    }
 
-            var jobTimeSeries = jobs
-                .GroupBy(job => job.publishedAt.ToString("yyyy-MM-dd"))
-                .Select(group => new JobTimeSeries
+    /// <summary>
+    /// Get a time series of average daily earnings of added jobs
+    /// </summary>
+    public IEnumerable<JobTimeSeries> GetAverageEarningTimeSeries()
+    {
+        IEnumerable<JobOffer> jobs = jobOfferRepository.GetAll();
+
+        var jobTimeSeries = jobs
+            .GroupBy(job => job.publishedAt.ToString("yyyy-MM-dd"))
+            .Select(group => new JobTimeSeries
+            {
+                Date = group.Key,
+                Value = (int)group
+                    .Where(job => job.employmentTypes != null)
+                    .SelectMany(job => job.employmentTypes)
+                    .Where(type => type.from_pln.HasValue && type.to_pln.HasValue)
+                    .Select(type => (type.from_pln.Value + type.to_pln.Value) / 2)
+                    .DefaultIfEmpty(0)
+                    .Average()
+            })
+            .OrderBy(job => job.Date)
+            .ToList();
+
+        return jobTimeSeries;
+    }
+
+    /// <summary>
+    /// Get a detailed summary of certain IT position that include 
+    /// </summary>
+    public async Task<IEnumerable<JobStatistic>> CreateStatistics(IEnumerable<string> skill, IEnumerable<string> experienceLevel, IEnumerable<string> workingTime, IEnumerable<string> workplaceType, IEnumerable<string> type)
+    {
+        IEnumerable<JobOffer> jobs = jobOfferRepository.GetAll();
+        var data_filtered = jobs
+            .Where(job => job.requiredSkills.Intersect(skill).Any())
+            .Where(job => experienceLevel.Any(level => job.experienceLevel.Contains(level)))
+            .Where(job => workingTime.Any(level => job.workingTime.Contains(level)))
+            .Where(job => workplaceType.Any(level => job.workplaceType.Contains(level)))
+            .Where(job => job.employmentTypes.Any(et => type.Contains(et.type)))
+            .ToList();
+
+        var data = data_filtered
+                .GroupBy(job => job.publishedAt.ToString($"yyyy-MM-dd"))
+                .Select(group => new JobStatistic
                 {
-                    Date = group.Key,
-                    Value = group.Select(job => job.slug).Distinct().Count()
-                })
-                .OrderBy(job => job.Date)
-                .ToList();
-
-            return jobTimeSeries;
-        }
-
-        /// <summary>
-        /// Get a time series of average daily earnings of added jobs
-        /// </summary>
-        public IEnumerable<JobTimeSeries> GetAverageEarningTimeSeries()
-        {
-            IEnumerable<JobOffer> jobs = _jobOffersCollection.Find(_ => true).ToList();
-
-            var jobTimeSeries = jobs
-                .GroupBy(job => job.publishedAt.ToString("yyyy-MM-dd"))
-                .Select(group => new JobTimeSeries
-                {
-                    Date = group.Key,
-                    Value = (int)group
+                    x = group.Key,
+                    addedOffers = group.Select(job => job.slug).Distinct().Count(),
+                    averageSalary = (int)group
                         .Where(job => job.employmentTypes != null)
                         .SelectMany(job => job.employmentTypes)
                         .Where(type => type.from_pln.HasValue && type.to_pln.HasValue)
@@ -69,24 +98,9 @@ namespace Profession_Analytics.Application.Services
                         .DefaultIfEmpty(0)
                         .Average()
                 })
-                .OrderBy(job => job.Date)
+                .OrderBy(job => job.x)
                 .ToList();
 
-            return jobTimeSeries;
-        }
-
-        public async Task<IEnumerable<AreaChartData>> CreateStatistics(string title, IEnumerable<string> experienceLevel, IEnumerable<string> workingTime, IEnumerable<string> workplaceType, IEnumerable<string> type)
-        {
-            IEnumerable<JobOffer> jobs = _jobOffersCollection.Find(_ => true).ToList();
-            var jobStatistics = jobs
-                .Where(job => job.slug.Contains(title, StringComparison.OrdinalIgnoreCase)) 
-                .Where(job => experienceLevel.Contains(job.experienceLevel)) 
-                .Where(job => workingTime.Contains(job.workingTime)) 
-                .Where(job => workplaceType.Contains(job.workplaceType)) 
-                .GroupBy(job => job.publishedAt.ToString("yyyy-MM")) 
-                .ToList();
-
-            return await Task.FromResult(new List<AreaChartData>());
-        }
+        return await Task.FromResult(data);
     }
 }

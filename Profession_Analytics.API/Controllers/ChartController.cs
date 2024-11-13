@@ -2,35 +2,33 @@
 using Profession_Analytics.Application.Interfaces;
 using Profession_Analytics.Application.Services;
 
-namespace Profession_Analytics.API.Controllers
+namespace Profession_Analytics.API.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class ChartController(IChartService _chartService) : Controller
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class ChartController : Controller
+
+    [HttpGet]
+    [Route("Create")]
+    public async Task<IActionResult> Create([FromQuery] string type, 
+        [FromQuery] string x, [FromQuery] string y, [FromQuery] string frequency)
     {
-        private IChartService _chartService;
-        public ChartController(IChartService jobService)
+        if(type == "Lined") 
         {
-            _chartService = jobService;
+            var response = await _chartService.GetLineChartData(x, y, frequency);
+            if(response == null)
+                return NotFound();
+            return Ok(response);
+        }
+        if( type == "Area") 
+        {
+            var response = await _chartService.GetAreaChartData(x, y, frequency);
+            if (response == null)
+                return NotFound();
+            return Ok(response);
         }
 
-
-        [HttpGet]
-        [Route("Create")]
-        public async Task<IActionResult> Create([FromQuery] string type, 
-            [FromQuery] string x, [FromQuery] string y, [FromQuery] string frequency)
-        {
-            if(type == "Lined") 
-            {
-                return Ok(await _chartService.GetLineChartData(x, y, frequency));
-            }
-            if( type == "Area") 
-            {
-                return Ok(await _chartService.GetAreaChartData(x, y, frequency));
-            }
-            return BadRequest("Żądanie błędne");
-        }
-
-
+        return BadRequest("Żądanie błędne");
     }
 }

@@ -3,56 +3,40 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '..//styles/App.css';
 import axios from 'axios';
 import { API_URL } from '../config/config';
+import LineChart from '../components/Charts/LineChart';
+import StackedAreaChart from '../components/Charts/StackedAreaChart';
 
 const JobStatistic: React.FC = () => {
-  
-  const [data, setData] = useState<{ title: string; experienceLevel: string[]; type: string[]; workingTime: string[]; workplaceType: string[]  } | null>(null);
-  const [statistics, setStatistics] = useState<{ x: string; y: number }[]>([]); 
+  const [jobRespone, SetJobResponse] = useState<{ x: string; addedOffers: number, averageSalary: number }[]>([]);
 
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const data = {
-      title: formData.get('title') as string,
-      experienceLevel: formData.getAll('experienceLevel') as string[],
-      type: formData.getAll('type') as string[],
-      workingTime: formData.getAll('workingTime') as string[],
-      workplaceType: formData.getAll('workplaceType') as string[],
+      skill: formData.get('skill') as string,
+      experienceLevel: (formData.getAll('experienceLevel') as string[]).join(','),
+      type: (formData.getAll('type') as string[]).join(','),
+      workingTime: (formData.getAll('workingTime') as string[]).join(','),
+      workplaceType: (formData.getAll('workplaceType') as string[]).join(','),
     };
-    setData(data);
     console.log(data);
-
-    axios.get(`${API_URL}/Job/Statistics`, {
+    axios.get(`${API_URL}/Job/CreateStatistic`, {
       params: {
-          title: data.title,
+          skill: data.skill,
           experienceLevel: data.experienceLevel,
           type: data.type,
           workingTime: data.workingTime,
           workplaceType: data.workplaceType
-      },
-      paramsSerializer: params => {
-        return Object.entries(params)
-          .map(([key, value]) => Array.isArray(value) ? value.map(v => `${key}=${v}`).join('&') : `${key}=${value}`)
-          .join('&');
       }
     })
     .then(response => {
-      setStatistics(response.data.map((item: { x: string; y: number }) => ({ x: item.x, y: item.y })));
+      SetJobResponse(response.data);
+      console.log(response.data);
     })
     .catch(error => {
         console.error("Błąd Axios:", error);
     });
   };
-
-  useEffect(() => {
-    if (data) {
-      console.log('Data:', data);
-    }
-    if (statistics.length > 0) {
-      console.log('Statistics:', statistics);
-    }
-  }, [data, statistics]);
-
 
   return (
     <div className="App">
@@ -72,13 +56,13 @@ const JobStatistic: React.FC = () => {
         <div id="ChartSelector">
           <h1 className='text-dark'>Statystyki zawodu</h1>
           <form onSubmit={handleFormSubmit}>
-            <div className="row g-3">
-              <div className="col-md-3">
-                <label htmlFor="title" className="form-label">Pozycja</label>
-                <input name="title" type='text' className="form-select form-select-sm bg-dark text-light" />
+            <div className="row">
+              <div className="col m-1">
+                <label htmlFor="skill" className="form-label">Umiejętności</label>
+                <input name="skill" type='text' className="form-select form-select-sm bg-dark text-light" />
               </div>
 
-              <div className="col-md-3">
+              <div className="col m-1">
                 <label htmlFor="experienceLevel" className="form-label">Doświadczenie</label>
                 <select
                   name="experienceLevel"
@@ -92,7 +76,7 @@ const JobStatistic: React.FC = () => {
                 </select>
               </div>
 
-              <div className="col-md-3">
+              <div className="col m-1">
                 <label htmlFor="type" className="form-label">Umowa:</label>
                 <select
                   name="type"
@@ -106,8 +90,9 @@ const JobStatistic: React.FC = () => {
                   <option value="mandate_contract">Umowa zlecenie</option>  
                 </select>
               </div>
-
-              <div className="col-md-3">
+            </div>
+            <div className="row">
+              <div className="col m-1">
                 <label htmlFor="workingTime" className="form-label">Wymiar Godzinowy</label>
                 <select
                   name="workingTime"
@@ -121,9 +106,8 @@ const JobStatistic: React.FC = () => {
                   <option value="undetermined">Nieokreślone</option>
                 </select>
               </div>
-            </div>
 
-            <div className="col-md-3">
+            <div className="col m-1">
                 <label htmlFor="workplaceType" className="form-label">Forma zatrudnienia</label>
                 <select
                   name="workplaceType"
@@ -135,7 +119,7 @@ const JobStatistic: React.FC = () => {
                   <option value="hybrid">Hybryda</option>
                 </select>
               </div>
-
+            </div>
             <div className="text-center my-3">
               <button id="submit" type="submit" className="btn btn-dark m-1">
                 Wybierz

@@ -1,18 +1,11 @@
+using Profession_Analytics.Application.Extensions;
 using Profession_Analytics.Application.Interfaces;
 using Profession_Analytics.Application.Services;
-using MongoDB.Driver;
+using Profession_Analytics.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
-builder.Services.AddSingleton<IMongoClient>(s =>
-{
-    return new MongoClient("mongodb://localhost:27017/Job_Analytics");
-});
-
-builder.Services.AddScoped<IJobService, JobService>();
-builder.Services.AddScoped<IChartService, ChartService>();
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddApplication(builder.Configuration);
 
 builder.Services.AddCors(options =>
 {
