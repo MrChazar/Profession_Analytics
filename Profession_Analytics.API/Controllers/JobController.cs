@@ -37,6 +37,7 @@ public class JobController(IJobService _jobService) : Controller
     public async Task<IActionResult> Statistics([FromQuery] StatisticsRequest request)
     {
         var response = await _jobService.CreateStatistics(
+            request.Title,
             request.Skill?.Split(","),
             request.ExperienceLevel?.Split(","),
             request.WorkingTime?.Split(","),

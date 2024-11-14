@@ -15,7 +15,7 @@ public interface IJobService
      IEnumerable<JobTimeSeries> GetJobTimeSeries();
      IEnumerable<JobTimeSeries> GetAverageEarningTimeSeries();
 
-     Task<IEnumerable<JobStatistic>> CreateStatistics(IEnumerable<string> skill, 
+     Task<IEnumerable<JobStatistic>> CreateStatistics(string title, IEnumerable<string> skill, 
         IEnumerable<string> experienceLevel,
         IEnumerable<string> workingtime, IEnumerable<string> workplaceType, IEnumerable<string> type);
 }

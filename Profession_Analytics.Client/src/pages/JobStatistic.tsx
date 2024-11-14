@@ -13,6 +13,7 @@ const JobStatistic: React.FC = () => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const data = {
+      title: formData.get('title') as string,
       skill: formData.get('skill') as string,
       experienceLevel: (formData.getAll('experienceLevel') as string[]).join(','),
       type: (formData.getAll('type') as string[]).join(','),
@@ -22,6 +23,7 @@ const JobStatistic: React.FC = () => {
     console.log(data);
     axios.get(`${API_URL}/Job/CreateStatistic`, {
       params: {
+          title: data.title,
           skill: data.skill,
           experienceLevel: data.experienceLevel,
           type: data.type,
@@ -58,8 +60,8 @@ const JobStatistic: React.FC = () => {
           <form onSubmit={handleFormSubmit}>
             <div className="row">
               <div className="col m-1">
-                <label htmlFor="skill" className="form-label">Umiejętności</label>
-                <input name="skill" type='text' className="form-select form-select-sm bg-dark text-light" />
+                <label htmlFor="title" className="form-label">Pozycja</label>
+                <input name="title" type='text' className="form-select form-select-sm bg-dark text-light" />
               </div>
 
               <div className="col m-1">
@@ -119,6 +121,12 @@ const JobStatistic: React.FC = () => {
                   <option value="hybrid">Hybryda</option>
                 </select>
               </div>
+
+              <div className="col m-1">
+                <label htmlFor="skill" className="form-label">Umiejętności</label>
+                <input name="skill" type='text' className="form-select form-select-sm bg-dark text-light" />
+              </div>
+
             </div>
             <div className="text-center my-3">
               <button id="submit" type="submit" className="btn btn-dark m-1">
@@ -128,6 +136,32 @@ const JobStatistic: React.FC = () => {
           </form>
       </div>    
       </div>
+
+      <div id="rightcontainer" className="flex-grow-1 container text-center">
+        <h2 className='text-light'>Wykres Dodanych Ofert</h2>
+          {jobRespone.length > 0 ? (
+          <LineChart 
+          data={jobRespone.map(item => ({
+            xAxis: item.x,
+            yAxis: item.addedOffers
+          }))}
+          width={800}
+          height={400}
+          />
+          ) : null}
+      </div>
+
+      <h2 className='text-light'>Wykres Średnich Zarobków</h2>
+      {jobRespone.length > 0 ? (
+          <LineChart 
+          data={jobRespone.map(item => ({
+            xAxis: item.x,
+            yAxis: item.averageSalary
+          }))}
+          width={800}
+          height={400}
+          />
+          ) : null}
 
       <footer className="bg-light py-3" id="footer">
         <div className="container text-center text-dark">

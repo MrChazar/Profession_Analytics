@@ -73,11 +73,11 @@ public class JobService(IJobOfferRepository jobOfferRepository) : IJobService
     /// <summary>
     /// Get a detailed summary of certain IT position that include 
     /// </summary>
-    public async Task<IEnumerable<JobStatistic>> CreateStatistics(IEnumerable<string> skill, IEnumerable<string> experienceLevel, IEnumerable<string> workingTime, IEnumerable<string> workplaceType, IEnumerable<string> type)
+    public async Task<IEnumerable<JobStatistic>> CreateStatistics(string title, IEnumerable<string> skill, IEnumerable<string> experienceLevel, IEnumerable<string> workingTime, IEnumerable<string> workplaceType, IEnumerable<string> type)
     {
         IEnumerable<JobOffer> jobs = jobOfferRepository.GetAll();
         var data_filtered = jobs
-            .Where(job => job.requiredSkills.Intersect(skill).Any())
+            .Where(job => job.title.Contains(title))
             .Where(job => experienceLevel.Any(level => job.experienceLevel.Contains(level)))
             .Where(job => workingTime.Any(level => job.workingTime.Contains(level)))
             .Where(job => workplaceType.Any(level => job.workplaceType.Contains(level)))
