@@ -11,22 +11,19 @@ interface StackedAreaChartProps {
 
 const StackedAreaChart: React.FC<StackedAreaChartProps> = ({ data = [], width, height }) => {
   debugger
-  // Obsługa przypadku braku danych
   if (!data.length) {
     return <div>No data available</div>;
   }
 
-  // Wyodrębnienie unikalnych etykiet dla serii
   const seriesLabels = Array.from(
-    new Set(data.flatMap(d => (d.yAxis ? d.yAxis.map(item => item.item1) : []))) // Sprawdzenie, czy `d.y` istnieje
+    new Set(data.flatMap(d => (d.yAxis ? d.yAxis.map(item => item.item1) : []))) 
   );
 
-  // Transformacja danych dla każdej serii
   const transformedData = seriesLabels.map(label => ({
     label,
     data: data.map(d => {
-      const match = d.yAxis ? d.yAxis.find(item => item.item1 === label) : undefined; // Sprawdzenie, czy `y` istnieje
-      return match ? match.item2 : 0; // Wartość 0, jeśli brak dopasowania
+      const match = d.yAxis ? d.yAxis.find(item => item.item1 === label) : undefined; 
+      return match ? match.item2 : 0; 
     }),
   }));
 
@@ -64,7 +61,7 @@ const StackedAreaChart: React.FC<StackedAreaChartProps> = ({ data = [], width, h
             fill: '#FFFFFF',
           },
           '.MuiChart-legendLabel': {
-          fill: '#FFFFFF', // Biały kolor dla etykiet serii
+          fill: '#FFFFFF', 
         },
         },
       }}

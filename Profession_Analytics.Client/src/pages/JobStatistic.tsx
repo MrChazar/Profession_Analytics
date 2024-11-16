@@ -7,7 +7,7 @@ import LineChart from '../components/Charts/LineChart';
 import StackedAreaChart from '../components/Charts/StackedAreaChart';
 
 const JobStatistic: React.FC = () => {
-  const [jobRespone, SetJobResponse] = useState<{ x: string; addedOffers: number, averageSalary: number }[]>([]);
+  const [jobRespone, SetJobResponse] = useState<{ x: string; addedOffers: number, averageSalary: number, cities: [string, number][], company: [string, number][] }[]>([]);
 
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -19,8 +19,8 @@ const JobStatistic: React.FC = () => {
       type: (formData.getAll('type') as string[]).join(','),
       workingTime: (formData.getAll('workingTime') as string[]).join(','),
       workplaceType: (formData.getAll('workplaceType') as string[]).join(','),
+      frequency: formData.get('frequency') as string,
     };
-    console.log(data);
     axios.get(`${API_URL}/Job/CreateStatistic`, {
       params: {
           title: data.title,
@@ -28,7 +28,8 @@ const JobStatistic: React.FC = () => {
           experienceLevel: data.experienceLevel,
           type: data.type,
           workingTime: data.workingTime,
-          workplaceType: data.workplaceType
+          workplaceType: data.workplaceType,
+          frequency: data.frequency
       }
     })
     .then(response => {
@@ -47,10 +48,9 @@ const JobStatistic: React.FC = () => {
           <link rel="icon" type="image/x-icon" href="/img/favicon.ico"></link>
           <span className="navbar-brand mb-0 h1"><a className='text-dark' href='MainPage'>Profession Analytics</a></span> 
           <div>
-            <button className="btn btn-dark m-1"><a href='ChartCreator'>Kreator Wykresów</a></button>
-            <button className="btn btn-dark m-1"><a href='JobStatistic'>Statystyki zawodu</a></button> 
+            <a href='ChartCreator'><button className="btn btn-dark m-1">Kreator Wykresów</button></a>
+            <a href='JobStatistic'><button className="btn btn-dark m-1">Statystyki zawodu</button></a>
           </div>
-          
         </div>
       </nav>
       
@@ -110,22 +110,34 @@ const JobStatistic: React.FC = () => {
               </div>
 
             <div className="col m-1">
-                <label htmlFor="workplaceType" className="form-label">Forma zatrudnienia</label>
-                <select
-                  name="workplaceType"
-                  className="form-select form-select-sm bg-dark text-light"
-                  multiple
-                >
-                  <option value="remote">Zdalnie</option>
-                  <option value="office">Biuro</option>
-                  <option value="hybrid">Hybryda</option>
-                </select>
-              </div>
+              <label htmlFor="workplaceType" className="form-label">Forma zatrudnienia</label>
+              <select
+                name="workplaceType"
+                className="form-select form-select-sm bg-dark text-light"
+                multiple
+              >
+                <option value="remote">Zdalnie</option>
+                <option value="office">Biuro</option>
+                <option value="hybrid">Hybryda</option>
+              </select>
+            </div>
 
-              <div className="col m-1">
-                <label htmlFor="skill" className="form-label">Umiejętności</label>
-                <input name="skill" type='text' className="form-select form-select-sm bg-dark text-light" />
-              </div>
+            <div className="col m-1">
+              <label htmlFor="skill" className="form-label">Umiejętności</label>
+              <input name="skill" type='text' className="form-select form-select-sm bg-dark text-light" />
+            </div>
+
+            <div className="col m-1">
+              <label htmlFor="frequency" className="form-label">Frekwencja</label>
+              <select
+              name="frequency"
+              className="form-select form-select-sm bg-dark text-light"
+              >
+                <option value="yyyy-MM-dd">Dzienna</option>
+                <option value="yyyy-MM">Miesięczna</option>
+                <option value="yyyy">Roczna</option>
+            </select>
+            </div>
 
             </div>
             <div className="text-center my-3">
@@ -138,8 +150,8 @@ const JobStatistic: React.FC = () => {
       </div>
 
       <div id="rightcontainer" className="flex-grow-1 container text-center">
-        <h2 className='text-light'>Wykres Dodanych Ofert</h2>
-          {jobRespone.length > 0 ? (
+          {jobRespone.length > 0 ? (<>
+          <h2 className='text-light'>Wykres Dodanych Ofert</h2>
           <LineChart 
           data={jobRespone.map(item => ({
             xAxis: item.x,
@@ -147,21 +159,23 @@ const JobStatistic: React.FC = () => {
           }))}
           width={800}
           height={400}
-          />
+          /></>
           ) : null}
       </div>
 
-      <h2 className='text-light'>Wykres Średnich Zarobków</h2>
-      {jobRespone.length > 0 ? (
-          <LineChart 
-          data={jobRespone.map(item => ({
-            xAxis: item.x,
-            yAxis: item.averageSalary
-          }))}
-          width={800}
-          height={400}
-          />
-          ) : null}
+      <div id="rightcontainer" className="flex-grow-1 container text-center">
+        {jobRespone.length > 0 ? (<>
+            <h2 className='text-light'>Wykres Średnich Zarobków</h2>
+            <LineChart 
+            data={jobRespone.map(item => ({
+              xAxis: item.x,
+              yAxis: item.averageSalary
+            }))}
+            width={800}
+            height={400}
+            />
+            </>) : null}
+      </div>
 
       <footer className="bg-light py-3" id="footer">
         <div className="container text-center text-dark">

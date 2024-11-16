@@ -20,10 +20,9 @@ const ChartCreator: React.FC = () => {
           <link rel="icon" type="image/x-icon" href="/img/favicon.ico"></link>
           <span className="navbar-brand mb-0 h1"><a className='text-dark' href='MainPage'>Profession Analytics</a></span> 
           <div>
-            <button className="btn btn-dark m-1"><a href='ChartCreator'>Kreator Wykresów</a></button>
-            <button className="btn btn-dark m-1"><a href='JobStatistic'>Statystyki zawodu</a></button> 
+            <a href='ChartCreator'><button className="btn btn-dark m-1">Kreator Wykresów</button></a>
+            <a href='JobStatistic'><button className="btn btn-dark m-1">Statystyki zawodu</button></a>
           </div>
-          
         </div>
       </nav>
       

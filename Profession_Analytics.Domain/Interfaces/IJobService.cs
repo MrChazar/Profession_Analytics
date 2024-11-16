@@ -17,5 +17,8 @@ public interface IJobService
 
      Task<IEnumerable<JobStatistic>> CreateStatistics(string title, IEnumerable<string> skill, 
         IEnumerable<string> experienceLevel,
-        IEnumerable<string> workingtime, IEnumerable<string> workplaceType, IEnumerable<string> type);
+        IEnumerable<string> workingtime, 
+        IEnumerable<string> workplaceType, 
+        IEnumerable<string> type,
+        string frequency);
 }

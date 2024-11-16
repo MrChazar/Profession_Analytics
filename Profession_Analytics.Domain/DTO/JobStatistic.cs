@@ -11,4 +11,5 @@ public class JobStatistic
     public string x { get; set; }
     public int addedOffers { get; set; }
     public int averageSalary { get; set; }
+   
 }

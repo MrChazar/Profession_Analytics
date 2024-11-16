@@ -73,7 +73,12 @@ public class JobService(IJobOfferRepository jobOfferRepository) : IJobService
     /// <summary>
     /// Get a detailed summary of certain IT position that include 
     /// </summary>
-    public async Task<IEnumerable<JobStatistic>> CreateStatistics(string title, IEnumerable<string> skill, IEnumerable<string> experienceLevel, IEnumerable<string> workingTime, IEnumerable<string> workplaceType, IEnumerable<string> type)
+    public async Task<IEnumerable<JobStatistic>> CreateStatistics(string title, IEnumerable<string> skill, 
+        IEnumerable<string> experienceLevel, 
+        IEnumerable<string> workingTime, 
+        IEnumerable<string> workplaceType, 
+        IEnumerable<string> type,
+        string frequency)
     {
         IEnumerable<JobOffer> jobs = jobOfferRepository.GetAll();
         var data_filtered = jobs
@@ -85,7 +90,7 @@ public class JobService(IJobOfferRepository jobOfferRepository) : IJobService
             .ToList();
 
         var data = data_filtered
-                .GroupBy(job => job.publishedAt.ToString($"yyyy-MM-dd"))
+                .GroupBy(job => job.publishedAt.ToString($"{frequency}"))
                 .Select(group => new JobStatistic
                 {
                     x = group.Key,
@@ -96,7 +101,7 @@ public class JobService(IJobOfferRepository jobOfferRepository) : IJobService
                         .Where(type => type.from_pln.HasValue && type.to_pln.HasValue)
                         .Select(type => (type.from_pln.Value + type.to_pln.Value) / 2)
                         .DefaultIfEmpty(0)
-                        .Average()
+                        .Average(),
                 })
                 .OrderBy(job => job.x)
                 .ToList();

@@ -28,6 +28,9 @@ const MuiLineChart: React.FC<LineChartProps> = ({ data, width, height }) => {
           [`.${axisClasses.tickLabel}`]: {
             fill: '#FFFFFF', 
           },
+          [`.${axisClasses.label}`]: {
+            fill: '#FFFFFF',
+          }
         },
       }}
     />

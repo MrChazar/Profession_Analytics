@@ -42,7 +42,8 @@ public class JobController(IJobService _jobService) : Controller
             request.ExperienceLevel?.Split(","),
             request.WorkingTime?.Split(","),
             request.WorkplaceType?.Split(","),
-            request.Type?.Split(",")
+            request.Type?.Split(","),
+            request.Frequency
         );
 
         if (response == null)

@@ -15,4 +15,5 @@ public class StatisticsRequest
     public string WorkingTime { get; set; }
     public string WorkplaceType { get; set; }
     public string Type { get; set; }
+    public string Frequency { get; set; }
 }
