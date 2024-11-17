@@ -1,0 +1,10 @@
+@echo off
+
+REM Uruchomienie skryptu w Pythonie
+python "C:\sciezka\do\skryptu.py"
+
+
+timeout /t 60 /nobreak >nul
+
+REM "Naciśnięcie" znaku | poprzez echa
+echo |

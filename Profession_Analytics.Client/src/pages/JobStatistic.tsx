@@ -21,6 +21,12 @@ const JobStatistic: React.FC = () => {
       workplaceType: (formData.getAll('workplaceType') as string[]).join(','),
       frequency: formData.get('frequency') as string,
     };
+
+    if (!data.title || !data.experienceLevel || !data.type || !data.workingTime || !data.workplaceType || !data.frequency) {
+      window.alert("Wypełnij wszystkie pola");
+      return;
+    }
+    
     axios.get(`${API_URL}/Job/CreateStatistic`, {
       params: {
           title: data.title,

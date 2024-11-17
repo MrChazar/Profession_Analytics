@@ -83,6 +83,7 @@ public class JobService(IJobOfferRepository jobOfferRepository) : IJobService
         IEnumerable<JobOffer> jobs = jobOfferRepository.GetAll();
         var data_filtered = jobs
             .Where(job => job.title.Contains(title))
+            .Where(job => skill.Any(level => job.requiredSkills.Contains(level)))
             .Where(job => experienceLevel.Any(level => job.experienceLevel.Contains(level)))
             .Where(job => workingTime.Any(level => job.workingTime.Contains(level)))
             .Where(job => workplaceType.Any(level => job.workplaceType.Contains(level)))
