@@ -7,7 +7,7 @@ import LineChart from '../components/Charts/LineChart';
 import StackedAreaChart from '../components/Charts/StackedAreaChart';
 
 const JobStatistic: React.FC = () => {
-  const [jobRespone, SetJobResponse] = useState<{ x: string; addedOffers: number, averageSalary: number, cities: [string, number][], company: [string, number][] }[]>([]);
+  const [jobRespone, SetJobResponse] = useState<{ x: string; addedOffers: number, averageSalary: number, cities: [string, number][], company: [string, number][], jobLinks: string }[]>([]);
 
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -180,6 +180,15 @@ const JobStatistic: React.FC = () => {
             width={800}
             height={400}
             />
+            </>) : null}
+      </div>
+
+      <div id="rightcontainer" className="flex-grow-1 container text-center">
+        {jobRespone.length > 0 ? (<>
+            <h2 className='text-light'>Linki Ofert</h2>
+              {jobRespone.map(item => (
+                <a className='m-1' target="_blank" rel="noopener noreferrer" href={item.jobLinks}>{item.jobLinks}</a>
+              ))}
             </>) : null}
       </div>
 
